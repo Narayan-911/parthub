@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # 1. MongoDB Database
+  mongo:
+    image: mongo:7.0
+    container_name: parthub-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - parthub-mongo-data:/data/db
+    networks:
+      - parthub-net
+
+  # 2. Node.js & Express Backend API
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: parthub-server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/parthub
+      - JWT_SECRET=parthub_docker_production_jwt_secret_key_12345
+      - CLIENT_URL=http://localhost
+    depends_on:
+      - mongo
+    networks:
+      - parthub-net
+
+  # 3. React SPA Frontend (Served via Nginx)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: parthub-client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - parthub-net
+
+volumes:
+  parthub-mongo-data:
+    driver: local
+
+networks:
+  parthub-net:
+    driver: bridge
