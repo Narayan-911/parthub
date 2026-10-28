@@ -2,7 +2,7 @@
 
 > Production-Ready MERN Architecture for the PartHub Automotive E-Commerce Platform.
 
-## Directory Structure
+## Directory Structure 
 
 ```text
 parthub/
@@ -242,5 +242,6 @@ NODE_ENV=production npm start
 - **End-to-End (E2E) Tests:** 15 Passed (0 Failed)
 - **MongoDB Status:** Connected & seeded with 11 products + 1 test user
 
-#   p a r t h u b  
+#   p a r t h u b 
+ 
  
